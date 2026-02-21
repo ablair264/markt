@@ -1,0 +1,256 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f1419;
+  --card: #ffffff;
+  --card-foreground: #0f1419;
+  --popover: #ffffff;
+  --popover-foreground: #0f1419;
+  --primary: #4daebc;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f1419;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #e0f7fa;
+  --accent-foreground: #0f1419;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+  --surface: #f0f4f8;
+  --border: #d8dee8;
+  --input: #e2e8f0;
+  --ring: #4daebc;
+  --chart-1: #4daebc;
+  --chart-2: #8b5cf6;
+  --chart-3: #f59e0b;
+  --chart-4: #f43f5e;
+  --chart-5: #10b981;
+  --chart-6: #3b82f6;
+  --chart-7: #f97316;
+  --chart-8: #6366f1;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f1419;
+  --sidebar-primary: #4daebc;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e0f7fa;
+  --sidebar-accent-foreground: #0f1419;
+  --sidebar-border: #d8dee8;
+  --sidebar-ring: #4daebc;
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tracking-normal: -0.011em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: #0f1419;
+  --foreground: #f8f9fa;
+  --card: #1c2333;
+  --card-foreground: #f8f9fa;
+  --popover: #1c2333;
+  --popover-foreground: #f8f9fa;
+  --primary: #4daebc;
+  --primary-foreground: #0f1419;
+  --secondary: #1c2333;
+  --secondary-foreground: #f8f9fa;
+  --muted: #252d38;
+  --muted-foreground: #94a0b0;
+  --accent: #151c26;
+  --accent-foreground: #79d5e9;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #ffffff;
+  --success: #22c55e;
+  --success-foreground: #0f1419;
+  --warning: #fbbf24;
+  --warning-foreground: #0f1419;
+  --info: #60a5fa;
+  --info-foreground: #0f1419;
+  --surface: #2c3e50;
+  --border: #343d4a;
+  --input: #252d38;
+  --ring: #4daebc;
+  --chart-1: #79d5e9;
+  --chart-2: #a78bfa;
+  --chart-3: #fbbf24;
+  --chart-4: #fb7185;
+  --chart-5: #34d399;
+  --chart-6: #60a5fa;
+  --chart-7: #fb923c;
+  --chart-8: #818cf8;
+  --sidebar: #0b0f13;
+  --sidebar-foreground: #f8f9fa;
+  --sidebar-primary: rgba(77, 174, 188, 0.15);
+  --sidebar-primary-foreground: #79d5e9;
+  --sidebar-accent: #1c2333;
+  --sidebar-accent-foreground: #f8f9fa;
+  --sidebar-border: #2a3140;
+  --sidebar-ring: #4daebc;
+  --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.25);
+  --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow: 0 2px 6px 0 rgb(0 0 0 / 0.35), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 10px 20px -3px rgb(0 0 0 / 0.45), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 30px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.45);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-bg: var(--background);
+  --color-fg: var(--foreground);
+  --color-muted-fg: var(--muted-foreground);
+  --color-sidebar-fg: var(--sidebar-foreground);
+  --color-sidebar-accent-fg: var(--sidebar-accent-foreground);
+  --color-sidebar-primary-fg: var(--sidebar-primary-foreground);
+  --color-overlay: var(--popover);
+  --color-navbar-fg: var(--foreground);
+  --container-padding: 1rem;
+  --gutter: 1rem;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* react-grid-layout resize handle */
+.react-resizable-handle {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  background: none !important;
+  cursor: se-resize;
+  z-index: 30;
+}
+
+.react-resizable-handle::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.react-resizable-handle::after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--color-muted-foreground);
+  border-bottom: 1.5px solid var(--color-muted-foreground);
+  border-radius: 1px;
+  transition: border-color 0.15s;
+}
+
+.react-resizable-handle:hover::before {
+  opacity: 1;
+}
+
+.react-resizable-handle:hover::after {
+  border-color: var(--color-primary);
+}
