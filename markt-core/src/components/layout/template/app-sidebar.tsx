@@ -6,6 +6,7 @@ import {
   ChevronDown,
   FileText,
   LayoutDashboard,
+  Lock,
   LogOut,
   Moon,
   PieChart,
@@ -105,6 +106,12 @@ const TEMPLATE_ITEMS: NavItemDef[] = [
     label: 'DND Dashboard',
     icon: <LayoutDashboard size={18} />,
     path: '/dashboard',
+  },
+  {
+    id: 'login-page-template',
+    label: 'Login Page',
+    icon: <Lock size={18} />,
+    path: '/templates/login',
   },
 ]
 

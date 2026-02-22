@@ -7,6 +7,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 interface PageHeaderState {
   title: string
   trailing?: ReactNode
+  hidden?: boolean
 }
 
 interface PageHeaderContextValue {
@@ -31,12 +32,12 @@ export function usePageHeader() {
   return context
 }
 
-export function useSetPageHeader(title: string, trailing?: ReactNode) {
+export function useSetPageHeader(title: string, trailing?: ReactNode, hidden?: boolean) {
   const { setPageHeader } = usePageHeader()
 
   useEffect(() => {
-    setPageHeader({ title, trailing })
-  }, [setPageHeader, title, trailing])
+    setPageHeader({ title, trailing, hidden })
+  }, [setPageHeader, title, trailing, hidden])
 }
 
 export function PageHeader() {
@@ -48,7 +49,13 @@ export function PageHeader() {
   }
 
   return (
-    <div className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 lg:px-6">
+    <div
+      className={`flex h-12 shrink-0 items-center justify-between border-b border-border px-4 transition-all duration-300 ease-out lg:px-6 ${
+        state.hidden
+          ? '-mt-12 opacity-0'
+          : 'mt-0 opacity-100'
+      }`}
+    >
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <div className="h-4 w-px bg-border" />

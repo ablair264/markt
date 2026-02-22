@@ -18,11 +18,24 @@ interface CompactCardBaseProps {
   onClick?: () => void;
 }
 
+/** Inline style for the accent bar pseudo-element. */
 function compactAccentStyle(accentColor: string): React.CSSProperties {
-  return {
-    borderColor: 'var(--color-border)',
-    borderLeftColor: accentColor,
-  };
+  return { '--_accent': accentColor } as React.CSSProperties;
+}
+
+/** Accent bar that slides out on card hover. Render as first child inside the Card. */
+function AccentBar() {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]"
+    >
+      <span
+        className="absolute inset-y-0 left-0 w-[3px] transition-[width] duration-300 ease-out group-hover:w-[6px]"
+        style={{ backgroundColor: 'var(--_accent)' }}
+      />
+    </span>
+  );
 }
 
 export const COMPACT_CARD_MIN_HEIGHT = 124;
@@ -59,6 +72,8 @@ export interface LiveActivityCompactCardProps extends CompactCardBaseProps {
   isLive?: boolean;
   /** Show skeleton placeholders while awaiting the first event. */
   loading?: boolean;
+  /** Small footer hint text below the message. */
+  footerHint?: string;
 }
 
 export function LiveActivityCompactCard({
@@ -68,6 +83,7 @@ export function LiveActivityCompactCard({
   activeLabel = 'Live now',
   isLive = true,
   loading = false,
+  footerHint,
   accentColor = 'var(--color-chart-1)',
   className,
   onClick,
@@ -76,11 +92,12 @@ export function LiveActivityCompactCard({
     return (
       <Card
         className={cn(
-          'min-h-[124px] border-l-[3px] p-3.5 gap-2 overflow-hidden',
+          'group relative min-h-[124px] p-3.5 pl-5 gap-2 overflow-hidden',
           className,
         )}
         style={compactAccentStyle(accentColor)}
       >
+        <AccentBar />
         <div className="flex items-center justify-between gap-2">
           <Skeleton className="h-3 w-20" />
           <Skeleton className="h-5 w-14 rounded-full" />
@@ -94,12 +111,13 @@ export function LiveActivityCompactCard({
   return (
     <Card
       className={cn(
-        'min-h-[124px] border-l-[3px] p-3.5 gap-2 overflow-hidden cursor-pointer transition-colors hover:border-primary/30',
+        'group relative min-h-[124px] p-3.5 pl-5 gap-2 overflow-hidden cursor-pointer transition-colors',
         className,
       )}
       style={compactAccentStyle(accentColor)}
       onClick={onClick}
     >
+      <AccentBar />
       <div className="flex items-center justify-between gap-2">
         <p className="text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
           {title}
@@ -124,13 +142,20 @@ export function LiveActivityCompactCard({
         )}
       </div>
 
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-1 min-h-0 items-center gap-3 overflow-hidden">
+        <Activity size={22} className="shrink-0 text-muted-foreground/50" />
         <BlurInText
           key={String(updateKey ?? latestUpdate)}
           text={latestUpdate}
           className="!m-0 !text-left !text-[18px] !leading-[1.2] !tracking-normal !font-semibold !font-sans !drop-shadow-none !text-foreground break-words"
         />
       </div>
+
+      {footerHint && (
+        <p className="text-[10px] font-medium text-muted-foreground/50">
+          {footerHint}
+        </p>
+      )}
     </Card>
   );
 }
@@ -238,12 +263,13 @@ export function NextEventCompactCard({
   return (
     <Card
       className={cn(
-        'min-h-[124px] border-l-[3px] p-3.5 gap-1.5 overflow-visible cursor-pointer transition-colors hover:border-primary/30',
+        'group relative min-h-[124px] p-3.5 pl-5 gap-1.5 overflow-visible cursor-pointer transition-colors',
         className,
       )}
       style={compactAccentStyle(accentColor)}
       onClick={onClick}
     >
+      <AccentBar />
       <div className="flex items-center justify-between gap-2">
         <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
           {icon ?? <CalendarDays className="h-3 w-3" />}
@@ -452,19 +478,26 @@ export function WhosOnlineCompactCard({
     <Card
       ref={cardRef}
       className={cn(
-        'min-h-[124px] border-l-[3px] p-3.5 gap-2 overflow-visible cursor-pointer transition-colors hover:border-primary/30 justify-between',
+        'group relative min-h-[124px] p-3.5 pl-5 gap-2 overflow-visible cursor-pointer transition-colors justify-between',
         className,
       )}
       style={compactAccentStyle(accentColor)}
       onClick={onClick}
     >
+      <AccentBar />
       <div className="flex items-center justify-between gap-2">
         <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
           {icon ?? <Users className="h-3 w-3" />}
           {title}
         </div>
-        <span className="text-[10px] text-muted-foreground tabular-nums">
-          {users.length}
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2 py-0.5">
+          <span className="relative inline-flex size-1.5">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/40" />
+            <span className="relative inline-flex size-1.5 rounded-full bg-emerald-400" />
+          </span>
+          <span className="text-[10px] font-medium tabular-nums text-emerald-300">
+            {users.length} online
+          </span>
         </span>
       </div>
 
@@ -528,12 +561,13 @@ export function SparkStatsCompactCard({
   return (
     <Card
       className={cn(
-        'min-h-[124px] border-l-[3px] p-3.5 gap-1.5 overflow-hidden cursor-pointer transition-colors hover:border-primary/30',
+        'group relative min-h-[124px] p-3.5 pl-5 gap-1.5 overflow-hidden cursor-pointer transition-colors',
         className,
       )}
       style={compactAccentStyle(accentColor)}
       onClick={onClick}
     >
+      <AccentBar />
       <div className="flex items-center justify-between gap-2">
         <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wide font-medium text-muted-foreground">
           {icon ?? <Activity className="h-3 w-3" />}

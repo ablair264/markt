@@ -76,3 +76,15 @@ export type {
 
 export { MasterLayoutTemplate } from './layout/template';
 export type { MasterLayoutTemplateProps } from './layout/template';
+
+export { LoginPageTemplate } from './templates/login-page';
+export type { LoginPageTemplateProps } from './templates/login-page';
+
+export { ComponentTheatre } from './showcase/component-theatre';
+export type {
+  ComponentTheatreProps,
+  ComponentDoc,
+  ComponentExampleDoc,
+  ComponentPropDoc,
+  ComponentCategoryDoc,
+} from './showcase/component-theatre';

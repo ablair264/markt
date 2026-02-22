@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   AreaChartCard,
   AREA_CHART_CARD_MIN_HEIGHT,
@@ -21,6 +21,12 @@ import {
   MasterLayoutTemplate,
   type DashboardWidget,
 } from '@/components'
+import { LoginPageTemplate } from '@/components/templates/login-page'
+import {
+  ComponentTheatre,
+  type ComponentDoc,
+  type ComponentCategoryDoc,
+} from '@/components/showcase/component-theatre'
 import {
   generateRevenueData,
   generateOrderData,
@@ -30,35 +36,8 @@ import {
   generateNewEnquiriesData,
 } from '@/lib/demo-data'
 
-interface ComponentPropDoc {
-  name: string
-  type: string
-  required?: boolean
-  description: string
-}
-
-interface ComponentExampleDoc {
-  title: string
-  description: string
-  code: string
-  preview: ReactNode
-}
-
-interface ComponentDoc {
-  title: string
-  description: string
-  usability: string
-  implementation: string
-  props: ComponentPropDoc[]
-  examples: ComponentExampleDoc[]
-}
-
-interface ComponentCategoryDoc {
-  title: string
-  description: string
-  basics: string
-  componentPaths: string[]
-}
+// ComponentPropDoc, ComponentExampleDoc, ComponentDoc, ComponentCategoryDoc
+// are now imported from '@/components/showcase/component-theatre'
 
 const revenueData = generateRevenueData()
 const orderData = generateOrderData()
@@ -147,6 +126,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/components/dotted-multi-line': 'Chart Cards',
   '/dashboard/components/rounded-pie': 'Chart Cards',
   '/dashboard/components/area-chart': 'Chart Cards',
+  '/templates/login': 'Login Page',
 }
 
 const COMPACT_CARD_COMPONENT_PATHS = [
@@ -226,167 +206,7 @@ const LEGACY_COMPONENT_ROUTE_TO_CATEGORY: Record<string, string> = {
   '/dashboard/components/dotted-multi-line': '/dashboard/components/chart-cards',
 }
 
-function ComponentDocumentationSection({
-  doc,
-  sectionId,
-}: {
-  doc: ComponentDoc
-  sectionId?: string
-}) {
-  return (
-    <section id={sectionId} className="space-y-6 border-t border-border pt-8 first:border-t-0 first:pt-0 scroll-mt-24">
-      <header className="space-y-2 scroll-mt-24">
-        <h2 className="text-xl font-semibold text-foreground">{doc.title}</h2>
-        <p className="max-w-4xl text-sm text-muted-foreground">{doc.description}</p>
-      </header>
-
-      <div className="space-y-4 md:space-y-5">
-        <article>
-          <h3 className="text-sm font-semibold text-foreground">Usability</h3>
-          <p className="mt-1 max-w-5xl text-sm text-muted-foreground">{doc.usability}</p>
-        </article>
-        <article>
-          <h3 className="text-sm font-semibold text-foreground">How To Implement</h3>
-          <p className="mt-1 max-w-5xl text-sm text-muted-foreground">{doc.implementation}</p>
-        </article>
-      </div>
-    </section>
-  )
-}
-
-function toSectionId(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function ComponentCategoryPage({
-  category,
-  docs,
-}: {
-  category: ComponentCategoryDoc
-  docs: ComponentDoc[]
-}) {
-  const sectionItems = useMemo(
-    () =>
-      docs.map((doc, index) => ({
-        id: `${toSectionId(category.title)}-${toSectionId(doc.title)}-${index + 1}`,
-        title: doc.title,
-      })),
-    [category.title, docs],
-  )
-
-  const [activeSectionId, setActiveSectionId] = useState(sectionItems[0]?.id ?? '')
-
-  useEffect(() => {
-    setActiveSectionId(sectionItems[0]?.id ?? '')
-  }, [sectionItems])
-
-  useEffect(() => {
-    if (!sectionItems.length) return
-
-    const elements = sectionItems
-      .map((item) => document.getElementById(item.id))
-      .filter((element): element is HTMLElement => element !== null)
-
-    if (!elements.length) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const mostVisible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (mostVisible?.target.id) {
-          setActiveSectionId(mostVisible.target.id)
-        }
-      },
-      {
-        rootMargin: '-25% 0px -55% 0px',
-        threshold: [0.1, 0.25, 0.5, 0.75],
-      },
-    )
-
-    elements.forEach((element) => observer.observe(element))
-    return () => observer.disconnect()
-  }, [sectionItems])
-
-  const handleScrollToSection = (sectionId: string) => {
-    const sectionElement = document.getElementById(sectionId)
-    if (!sectionElement) return
-    sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    setActiveSectionId(sectionId)
-  }
-
-  return (
-    <section className="w-full space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold text-foreground">{category.title}</h1>
-        <p className="max-w-4xl text-sm text-muted-foreground">{category.description}</p>
-      </header>
-
-      <article>
-        <h2 className="text-sm font-semibold text-foreground">Component Basics</h2>
-        <p className="mt-1 max-w-5xl text-sm text-muted-foreground">{category.basics}</p>
-      </article>
-
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] xl:gap-12">
-        <section className="space-y-10">
-          <h2 className="text-lg font-semibold text-foreground">Documentation</h2>
-          {docs.map((doc, index) => (
-            <ComponentDocumentationSection
-              key={sectionItems[index]?.id ?? doc.title}
-              sectionId={sectionItems[index]?.id}
-              doc={doc}
-            />
-          ))}
-        </section>
-
-        <aside className="h-fit self-start lg:sticky lg:top-16">
-          <h2 className="text-sm font-semibold text-foreground">Component Examples</h2>
-          <div className="mt-3 space-y-7">
-            {docs.map((doc, index) => {
-              const section = sectionItems[index]
-              if (!section) return null
-              const isActive = section.id === activeSectionId
-
-              return (
-                <section
-                  key={section.id}
-                  className="space-y-3"
-                >
-                  <button
-                    onClick={() => handleScrollToSection(section.id)}
-                    className={`text-left text-sm font-semibold transition-colors ${
-                      isActive ? 'text-primary' : 'text-foreground hover:text-primary'
-                    }`}
-                  >
-                    {section.title}
-                  </button>
-
-                  <div className="space-y-3">
-                    {doc.examples.map((example) => (
-                      <div key={example.title} className="space-y-2">
-                        <p className="text-xs font-medium text-muted-foreground/90">{example.title}</p>
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => handleScrollToSection(section.id)}
-                        >
-                          {example.preview}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )
-            })}
-          </div>
-        </aside>
-      </div>
-    </section>
-  )
-}
+// ComponentCategoryPage replaced by ComponentTheatre (imported above)
 
 function PlaceholderDocPage({
   title,
@@ -477,6 +297,7 @@ function App() {
             updateKey={liveIndex}
             activeLabel="Realtime"
             accentColor="var(--color-chart-1)"
+            footerHint="Streaming updates in realtime"
           />
         ),
       },
@@ -792,6 +613,7 @@ function App() {
                   updateKey={liveIndex}
                   activeLabel="Realtime"
                   accentColor="var(--color-chart-1)"
+                  footerHint="Streaming updates in realtime"
                 />
               </div>
             ),
@@ -802,6 +624,7 @@ function App() {
   updateKey={liveIndex}
   activeLabel="Realtime"
   accentColor="var(--color-chart-1)"
+  footerHint="Streaming updates in realtime"
 />`,
           },
         ],
@@ -1322,6 +1145,88 @@ function App() {
       )
     }
 
+    if (resolvedPath === '/templates/login') {
+      return (
+        <section className="w-full space-y-8">
+          <article className="space-y-3">
+            <div className="overflow-hidden rounded-2xl border border-border" style={{ height: 780 }}>
+              <LoginPageTemplate
+                onLogin={async () => {
+                  await new Promise((resolve) => setTimeout(resolve, 1500))
+                }}
+                logo={
+                  <span className="text-2xl font-bold tracking-tight text-white">
+                    Your<span className="text-primary">Logo</span>
+                  </span>
+                }
+                subtitle="Welcome back to your dashboard"
+                helpText={
+                  <span className="text-muted-foreground">
+                    Demo mode — no real authentication
+                  </span>
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Interactive demo with a simulated 1.5s login delay. Try submitting with any credentials.</p>
+          </article>
+
+          <header className="space-y-2">
+            <h1 className="text-2xl font-semibold text-foreground">Login Page Template</h1>
+            <p className="max-w-4xl text-sm text-muted-foreground">
+              A full-page dark glassmorphic login screen with animated gradient background, floating accents, and password visibility toggle. Wire up your auth provider via the <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-foreground">onLogin</code> callback.
+            </p>
+          </header>
+
+          <article className="space-y-4">
+            <h2 className="text-sm font-semibold text-foreground">Quick Start</h2>
+            <pre className="overflow-x-auto rounded-xl border border-border bg-card p-4 text-xs leading-relaxed text-foreground">
+{`import { LoginPageTemplate } from '@markt/core'
+
+function App() {
+  return (
+    <LoginPageTemplate
+      onLogin={async ({ username, password }) => {
+        // Wire to your auth provider
+        await signIn(username, password)
+      }}
+      logo={<img src="/logo.svg" alt="Logo" className="h-10" />}
+      subtitle="Welcome back"
+      helpText={<a href="/forgot">Forgot password?</a>}
+    />
+  )
+}`}
+            </pre>
+          </article>
+
+          <article className="space-y-3">
+            <h2 className="text-sm font-semibold text-foreground">Props</h2>
+            <div className="overflow-x-auto rounded-xl border border-border">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-border bg-muted/50">
+                    <th className="px-4 py-2.5 font-semibold text-foreground">Prop</th>
+                    <th className="px-4 py-2.5 font-semibold text-foreground">Type</th>
+                    <th className="px-4 py-2.5 font-semibold text-foreground">Default</th>
+                    <th className="px-4 py-2.5 font-semibold text-foreground">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="text-muted-foreground">
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">onLogin</td><td className="px-4 py-2 font-mono">{`(creds) => Promise<void>`}</td><td className="px-4 py-2">required</td><td className="px-4 py-2">Auth callback receiving username &amp; password</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">logo</td><td className="px-4 py-2 font-mono">ReactNode</td><td className="px-4 py-2">-</td><td className="px-4 py-2">Logo element above subtitle</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">subtitle</td><td className="px-4 py-2 font-mono">string</td><td className="px-4 py-2">"Access your dashboard"</td><td className="px-4 py-2">Text below the logo</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">usernameLabel</td><td className="px-4 py-2 font-mono">string</td><td className="px-4 py-2">"Username"</td><td className="px-4 py-2">First input label</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">passwordLabel</td><td className="px-4 py-2 font-mono">string</td><td className="px-4 py-2">"Password"</td><td className="px-4 py-2">Password input label</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">submitLabel</td><td className="px-4 py-2 font-mono">string</td><td className="px-4 py-2">"Sign In"</td><td className="px-4 py-2">Button text</td></tr>
+                  <tr className="border-b border-border/50"><td className="px-4 py-2 font-mono text-foreground">loadingLabel</td><td className="px-4 py-2 font-mono">string</td><td className="px-4 py-2">"Signing In..."</td><td className="px-4 py-2">Button text during loading</td></tr>
+                  <tr><td className="px-4 py-2 font-mono text-foreground">helpText</td><td className="px-4 py-2 font-mono">ReactNode</td><td className="px-4 py-2">-</td><td className="px-4 py-2">Footer content (forgot password link, etc.)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      )
+    }
+
     if (resolvedPath === '/dashboard') {
       return (
         <section className="w-full">
@@ -1339,7 +1244,7 @@ function App() {
         .map((componentPath) => getComponentDoc(componentPath))
         .filter((doc): doc is ComponentDoc => doc !== null)
 
-      return <ComponentCategoryPage category={category} docs={docs} />
+      return <ComponentTheatre category={category} docs={docs} />
     }
 
     return (
